@@ -69,7 +69,7 @@ def moisture():
 
 
 def command():
-     command = str(input("Please enter START, STOP, or STATUS to get an update: "))
+     command = str.upper(input("Please enter START, STOP, or STATUS to get an update: "))
 
      if command == "start":
         print("Starting the plant monitoring system. Please stand by for readings.")
