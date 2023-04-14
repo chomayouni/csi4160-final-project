@@ -6,6 +6,7 @@ import sched
 
 # this will trigger the lights/ anything hooked up to the IOT
 def ioton():
+    #This initializes the GPIO pin that will be used ot activate the IOT switch
     PIN_GPIO = 17
  
     GPIO.setwarnings(False)
@@ -48,7 +49,7 @@ def humidity():
             current += 1
 
 # When called, this function will output the data from the moisture sensor
-def moisture():
+def current_moisture():
     #This code was taken from piddlerOnTheRoof's tutorial on youtube
     #GPIO setup
     channel = 21
@@ -84,13 +85,12 @@ def command():
      elif command == "status":
         print("Displaying moisture and temperature data")
         humidity()
-        moisture()
+        current_moisture()
      else:
         print('INVALID INPUT: Please enter START, STOP, or STATUS to get an update: ')
 
 # This uses python's bulit in schedular to activate the IOT at sceduled times.
 def run_daily_schedule():
-    # Initialize the scheduler
     scheduler = sched.scheduler(time.time, time.sleep)
     
     # Define the function to be run at 8am
@@ -127,8 +127,54 @@ def get_next_run_time(hour):
     
     return next_run_time
 
-     
+def log_sensor_data():
+    # Code to read temperature, humidity, and moisture data goes here
+    temperature = get_temperature()
+    humidity = get_humidity()
+    moisture = get_moisture()
+    
+    # Code to log the data goes here
+    log_data(temperature, humidity, moisture)
+
+def get_temperature_and_humidity():
+    temperature = 25.0
+    return temperature
+
+def get_humidity():
+    humidity = 50.0
+    return humidity
+
+def get_moisture():
+    moisture = 75.0
+    return moisture
+
+def log_data(temperature, humidity, moisture):
+    # Open the CSV file in append mode
+    with open("sensor_data.csv", mode="a") as file:
+        # Create a CSV writer object
+        writer = csv.writer(file)
+        
+        # Write the sensor data to the CSV file
+        writer.writerow([temperature, humidity, moisture, time.time()])
+        
+    # Print a message to indicate that the data has been logged
+    print("Sensor data logged to CSV file")
+
+def start_sensor_logging():
+    # Schedule the logging function to run at the beginning of each hour
+    schedule.every().hour.at(":00").do(log_sensor_data)
+    
+    # Start the scheduler
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+        import csv
+
+
+
      
 
-#this function will run at the beginning of the program and start prompting the user
+# This function will run at the beginning of the program and start prompting the user
+run_daily_schedule()
 command()
