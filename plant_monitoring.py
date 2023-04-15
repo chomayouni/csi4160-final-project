@@ -94,6 +94,21 @@ def command():
      else:
         print('INVALID INPUT: Please enter START, STOP, or STATUS to get an update: ')
 
+def time_loop():
+    current_time = datetime.datetime.now().time()
+
+    while True():
+        if current_time > datetime.time(8, 0):
+            # Code to run if current time is greater than 8am goes here
+            print("It's past 8am!")
+            ioton()
+        elif current_time > datetime.time(17, 0):
+            # Code to run if current time is not greater than 8am goes here
+            print("It's after 5pm!")
+        else:
+            print("System initializing...")
+            
+
 # This uses python's bulit in schedular to activate the IOT at sceduled times.
 def run_daily_schedule():
     scheduler = sched.scheduler(time.time, time.sleep)
