@@ -96,8 +96,9 @@ def command():
 
 def time_loop():
     current_time = datetime.datetime.now().time()
+    state = str.lower(input("The Plant Monitoring System schedule is in place. Should it run normally? Any custom shanges will be overidden by the system.  y/n: "))
 
-    while True():
+    if state == "y":
         if current_time > datetime.time(8, 0):
             # Code to run if current time is greater than 8am goes here
             print("It's past 8am!")
@@ -105,47 +106,22 @@ def time_loop():
         elif current_time > datetime.time(17, 0):
             # Code to run if current time is not greater than 8am goes here
             print("It's after 5pm!")
+            iotoff()
         else:
             print("System initializing...")
-            
 
-# This uses python's bulit in schedular to activate the IOT at sceduled times.
-def run_daily_schedule():
-    scheduler = sched.scheduler(time.time, time.sleep)
+        print("System clock has been checked. Plant Monitoring System has resumed scheduled functions")
+    elif state == "n":
+        print("continuing...")
+    else:
+        print("INVALID INPUT: Please enter enter y or n")
+        time_loop()
     
-    # Define the function to be run at 8am
-    def run_at_8am():
-        print("The lights and fan were turned on at 8am!")
-        ioton()
-        
-        scheduler.enterabs(get_next_run_time(17), 1, run_at_5pm) #Sets the 5pm scedule
-
-    # Define the function to be run at 5pm
-    def run_at_5pm():
-        print("Scheduled shutdown has happened at 5pm!")
-        iotoff()
-        
-        scheduler.enterabs(get_next_run_time(8), 1, run_at_8am) #sets the 8am schedule
-
-    # Schedule the first run of the function at 8am
-    scheduler.enterabs(get_next_run_time(8), 1, run_at_8am)
     
-    # Start the scheduler
-    scheduler.run()
-
-def get_next_run_time(hour):
-    current_time = time.time()
-    current_datetime = time.localtime(current_time)
-
-    # Set the hour of the next run time to the specified hour
-    next_run_datetime = time.struct_time((current_datetime.tm_year, current_datetime.tm_mon, current_datetime.tm_mday, hour, 0, 0, current_datetime.tm_wday, current_datetime.tm_yday, current_datetime.tm_isdst))
-    next_run_time = time.mktime(next_run_datetime)
-    
-    # If the next run time is in the past, add a day to the next run time
-    if next_run_time < current_time:
-        next_run_time += 86400
-    
-    return next_run_time
+    print("To adjust the system in real time you can enter the following commands:")
+    print("START - will turn on the grow lights and fan ouside of working hours")
+    print("STOP - will turn off the grow lights and fan inside of working hours")
+    print("STATUS - will pull the current data from the Humidity,Temperature, and Moisture Sensors")
 
 def log_sensor_data():
     # Code to read temperature, humidity, and moisture data goes here
