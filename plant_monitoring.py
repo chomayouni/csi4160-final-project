@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import Adafruit_DHT
 import time
 import sched
+import csv
 
 
 # this will trigger the lights/ anything hooked up to the IOT
@@ -129,8 +130,7 @@ def get_next_run_time(hour):
 
 def log_sensor_data():
     # Code to read temperature, humidity, and moisture data goes here
-    temperature = get_temperature()
-    humidity = get_humidity()
+    temperature = get_temperature_and_humidity()
     moisture = get_moisture()
     
     # Code to log the data goes here
@@ -149,7 +149,6 @@ def get_moisture():
     return moisture
 
 def log_data(temperature, humidity, moisture):
-    # Open the CSV file in append mode
     with open("sensor_data.csv", mode="a") as file:
         # Create a CSV writer object
         writer = csv.writer(file)
@@ -169,11 +168,6 @@ def start_sensor_logging():
         schedule.run_pending()
         time.sleep(1)
 
-        import csv
-
-
-
-     
 
 # This function will run at the beginning of the program and start prompting the user
 run_daily_schedule()
