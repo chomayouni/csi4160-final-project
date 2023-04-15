@@ -63,9 +63,9 @@ def current_moisture():
  
     def callback(channel):
             if GPIO.input(channel):
-                    print("No water Detected!")
+                    print("No water Detected! Your plants need to be watered")
             else:
-                    print("Water Detected!")
+                    print("Soil moisture is nominal")
     # let us know when the pin goes HIGH or LOW
     GPIO.add_event_detect(channel, GPIO.BOTH, bouncetime=300)  
      # assign function to GPIO PIN, Run function on change
@@ -94,10 +94,14 @@ def command():
      else:
         print('INVALID INPUT: Please enter START, STOP, or STATUS to get an update: ')
 
+#This function handles the schedule of the plant monitoring system and pulls up the manual functions
 def time_loop():
+
+    # loop works by checking if the current time has exceded the parameters in the if statements
     current_time = datetime.datetime.now().time()
     state = str.lower(input("The Plant Monitoring System schedule is in place. Should it run normally? Any custom shanges will be overidden by the system.  y/n: "))
 
+    #The outermost if statement is put in place so that previous commands won't get overwritten automatiacally
     if state == "y":
         if current_time > datetime.time(8, 0):
             # Code to run if current time is greater than 8am goes here
@@ -117,11 +121,11 @@ def time_loop():
         print("INVALID INPUT: Please enter enter y or n")
         time_loop()
     
-    
     print("To adjust the system in real time you can enter the following commands:")
     print("START - will turn on the grow lights and fan ouside of working hours")
     print("STOP - will turn off the grow lights and fan inside of working hours")
     print("STATUS - will pull the current data from the Humidity,Temperature, and Moisture Sensors")
+    command()
 
 def log_sensor_data():
     # Code to read temperature, humidity, and moisture data goes here
@@ -166,4 +170,4 @@ def start_sensor_logging():
 
 # This function will run at the beginning of the program and start prompting the user
 while True:
-    command()
+    time_loop()
