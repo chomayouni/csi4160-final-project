@@ -3,19 +3,23 @@ import Adafruit_DHT
 import time
 import sched
 import csv
+import datetime
 
 
 # this will trigger the lights/ anything hooked up to the IOT
 def ioton():
     #This initializes the GPIO pin that will be used ot activate the IOT switch
     PIN_GPIO = 17
- 
+    current_time = datetime.datetime.now()
+    
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(PIN_GPIO, GPIO.OUT)
  
     GPIO.output(PIN_GPIO, True)
     print('Lights and fan have been turned on')
+    print("the current date and time is: ", current_time)
+    
 
 # this will turn off the lights/ anything hooked up to the IOT
 def iotoff():
@@ -170,5 +174,5 @@ def start_sensor_logging():
 
 
 # This function will run at the beginning of the program and start prompting the user
-run_daily_schedule()
-command()
+while True:
+    command()
