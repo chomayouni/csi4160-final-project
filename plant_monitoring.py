@@ -49,31 +49,27 @@ def humidity():
             print("Temp={0:0.1f}C  Humidity={1:0.1f}%".format(temperature, humidity))
             current += 1
         else:
-            print("Sensor failure. Check wiring.")
+            print("Retrieving Data...")
             time.sleep(3)
             current += 1
+    time_loop()
 
 # When called, this function will output the data from the moisture sensor
-def current_moisture():
+def is_soil_dry():
     #This code was taken from piddlerOnTheRoof's tutorial on youtube
     #GPIO setup
-    channel = 21
+    PIN = 21
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(channel, GPIO.IN)
- 
-    def callback(channel):
-            if GPIO.input(channel):
-                    print("No water Detected! Your plants need to be watered")
-            else:
-                    print("Soil moisture is nominal")
-    # let us know when the pin goes HIGH or LOW
-    GPIO.add_event_detect(channel, GPIO.BOTH, bouncetime=300)  
-     # assign function to GPIO PIN, Run function on change
-    GPIO.add_event_callback(channel, callback) 
- 
-    # infinite loop
-    while True:
-            time.sleep(1)
+    GPIO.setup(PIN, GPIO.IN)
+    
+    #  Reads the value from theGPIO pin
+    moisture = GPIO.input(PIN)
+    
+    if moisture == 0:
+        print("No water Detected! Your plants need to be watered")
+    else:
+        print("Soil moisture is nominal")
+
 
 #This function when called will prompt the users to enter a request 
 #This is meant to run tandam to the run_daily_schedule function and allows manual manipulation.
@@ -90,7 +86,7 @@ def command():
      elif command == "status":
         print("Displaying moisture and temperature data")
         humidity()
-        current_moisture()
+        is_soil_dry()
      else:
         print('INVALID INPUT: Please enter START, STOP, or STATUS to get an update: ')
 
